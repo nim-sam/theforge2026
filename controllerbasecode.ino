@@ -4,8 +4,8 @@ Controller controller("LeBronClanks", "lebron1234");
 void setup() {
   Serial.begin(115200);
 
-  controller.configureL298N(9, 7, 6, 10, 5, 4); //ENA, IN1, IN2, ENB, IN3, IN4
-  controller.setMotorMinPWM(90);
+  controller.configureL298N(10, 9, 8, 6, 5, 4); //ENA, IN1, IN2, ENB, IN3, IN4
+  controller.setMotorMinPWM(120);
   controller.setFailsafeTimeoutMs(1000);
 
   //buttons
@@ -19,6 +19,8 @@ void setup() {
 void loop() {
   controller.update();
 }
+
+//button functions
 
 void shoot() {
   // add shoot function here
