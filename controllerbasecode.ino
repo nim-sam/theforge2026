@@ -1,4 +1,5 @@
 #include <Controller.h>
+#include <Servo.h>
 
 // ports:
 // nav motors: ENA-A0, IN1-2, IN2-3 ; motor2: ENB-A1, IN3-4, IN4-5
@@ -54,5 +55,3 @@ void angleDown() {
   //add adjust angle function here
   Serial.println("angle decreased");
 }
-
-
