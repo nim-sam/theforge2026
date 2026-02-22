@@ -1,8 +1,9 @@
 #include <Controller.h>
 
 // ports:
-// nav motors: ENA-A0, IN1-2, IN2-3 ; motor2: ENB-A1, IN3-4, IN4-5
+// nav motors: LEFT: ENA-A0, IN1-2, IN2-3 ; RIGHT: motor2: ENB-A1, IN3-4, IN4-5
 // shoot motor: ENA-A2, IN1-6, IN2-7
+
 int shootMotor1 = 6;
 int shootMotor2 = 7;
 
@@ -12,14 +13,14 @@ void setup() {
   Serial.begin(115200);
 
   //nav motor configs
-  controller.configureL298N(A0, 2, 3, A1, 4, 5); //ENA, IN1, IN2, ENB, IN3, IN4
-  controller.setMotorMinPWM(120);
-  controller.setFailsafeTimeoutMs(1000);
+  controller.configureL298N(9, 2, 3, 10, 4, 5); //(LEFT) ENA, IN1, IN2, (RIGHT) ENB, IN3, IN4
+  controller.setMotorMinPWM(40);
+  controller.setFailsafeTimeoutMs(100);
 
   //shoot motor configs
   pinMode(shootMotor1, OUTPUT);
   pinMode(shootMotor2, OUTPUT);
-  pinMode(A2, OUTPUT);
+  pinMode(11, OUTPUT);
 
   //buttons
   controller.registerButton("SHOOT", shoot);
@@ -35,13 +36,17 @@ void loop() {
 
 //button functions
 void shoot() {
-  // add shoot function here
-  analogWrite(A2, 100); //speed
-  digitalWrite(6, HIGH); // spin motors
-  digitalWrite(7, LOW);
-  delay(3000);
 
   Serial.println("shoot button pressed");
+
+  // add shoot function here
+  analogWrite(11, 255); //speed
+  digitalWrite(6, HIGH); // spin motors
+  digitalWrite(7, LOW);
+  delay(500);
+  digitalWrite(6, LOW); // stop motors
+  digitalWrite(7, LOW);
+  
 
 }
 
@@ -55,4 +60,9 @@ void angleDown() {
   Serial.println("angle decreased");
 }
 
-
+void onDrive(int8_t left, int8_t right) {
+  Serial.print("left: ");
+  Serial.print(left);
+  Serial.print("right: ");
+  Serial.print(right);
+}
