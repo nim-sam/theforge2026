@@ -11,6 +11,9 @@ Servo laserPointer; // for laser pointer
 // motors
 int shootMotor1 = 6;
 int shootMotor2 = 7;
+bool isShooting = false;
+bool isUp = false;
+bool isDown = false;
 
 // tilt variables
 int tiltPin = A0;
@@ -23,8 +26,8 @@ void setup() {
 
   //nav motor configs
   controller.configureL298N(9, 2, 3, 10, 4, 5); //(LEFT) ENA, IN1, IN2, (RIGHT) ENB, IN3, IN4
-  controller.setMotorMinPWM(40);
-  controller.setFailsafeTimeoutMs(100);
+  controller.setMotorMinPWM(80);
+  controller.setFailsafeTimeoutMs(200);
 
   //shoot motor configs
   pinMode(shootMotor1, OUTPUT);
@@ -36,6 +39,7 @@ void setup() {
   controller.registerButton("ANGLE INCREASE", angleUp);
   controller.registerButton("ANGLE DECREASE", angleDown);
 
+<<<<<<< HEAD
   controller.beginAP(true);
 
   // tilt servo motor config
@@ -44,14 +48,19 @@ void setup() {
   // Attach the servo object to the pin
   tilt.attach(tiltPin); 
   tilt.write(tiltAngle); // Set initial position
+=======
+  controller.beginAP(false);
+>>>>>>> 7be372b95afedc7c36230a70178f6798858692e1
 }
 
 void loop() {
+  controller.registerDriveCallback(onDrive);
   controller.update();
 }
 
 //button functions
 void shoot() {
+<<<<<<< HEAD
   Serial.println("shoot button pressed");
 
   // add shoot function here
@@ -75,11 +84,51 @@ void angleDown() {
   //add adjust angle function here
   tilt.write(-tiltAngle);
   Serial.println("angle decreased");
+=======
+  isShooting = !isShooting;
+
+  // add shoot function here
+  if (isShooting) {
+    analogWrite(11, 255); //speed
+    digitalWrite(6, HIGH); // spin motors
+    digitalWrite(7, LOW);
+  } else {
+    digitalWrite(6, LOW);
+    digitalWrite(7, LOW);
+    analogWrite(11, 0);
+  }
 }
 
+void angleUp() {
+  isUp = !isUp;
+  if (isUp) {
+    //do something
+  } else {
+    //turn motor off
+  }
+}
+
+void angleDown() {
+  isDown = !isDown;
+    if (isDown) {
+    //do something
+    } else {
+      //turn motor off
+    }
+>>>>>>> 7be372b95afedc7c36230a70178f6798858692e1
+}
+
+//immediately stops robot after letting go of throttle
 void onDrive(int8_t left, int8_t right) {
-  Serial.print("left: ");
-  Serial.print(left);
-  Serial.print("right: ");
-  Serial.print(right);
+  if (left == 0 && right == 0) {
+    digitalWrite(2, LOW); 
+    digitalWrite(3, LOW);
+    digitalWrite(4, LOW); 
+    digitalWrite(5, LOW);
+    
+    analogWrite(9, 255);
+    analogWrite(10, 255);
+  } else {
+    controller.update();
+  }
 }
