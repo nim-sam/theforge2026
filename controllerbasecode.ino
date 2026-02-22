@@ -17,7 +17,8 @@ bool isDown = false;
 
 // tilt variables
 int tiltPin = 3;
-int tiltAngle = 95; // arbitrarily set 15 degrees
+int currentTiltAngle = 90; // arbitrarily set 15 degrees
+int tiltStepSize = 10;
 
 Controller controller("LeBronClanks", "lebron1234");
 
@@ -44,7 +45,7 @@ void setup() {
   
   // Attach the servo object to the pin
   tilt.attach(tiltPin); 
-  tilt.write(tiltAngle); // Set initial position
+  tilt.write(currentTiltAngle); // Set initial position
   
   controller.beginAP(false);
 }
@@ -55,29 +56,37 @@ void loop() {
 
 //button functions
 void shoot() {
-  Serial.println("shoot button pressed");
-
+  isShooting = !isShooting;
   // add shoot function here
-  analogWrite(11, 255); //speed
-  digitalWrite(shootMotor1, HIGH); // spin motors
-  digitalWrite(shootMotor2, LOW);
-  
-  delay(500); // can be unoptimal
-  
-  digitalWrite(shootMotor1, LOW); // stop motors
-  digitalWrite(shootMotor2, LOW);
+  if (isShooting) {
+    analogWrite(11, 255); //speed
+    digitalWrite(6, HIGH); // spin motors
+    digitalWrite(7, LOW);
+  } else {
+    digitalWrite(6, LOW);
+    digitalWrite(7, LOW);
+    analogWrite(11, 0);
+  }
 }
 
 void angleUp() {
   // add adjust angle function here
-  tilt.write(tiltAngle);
-  Serial.println("angle increased");
+  if (currentTiltAngle + tiltStepSize <= 180) {
+    currentTiltAngle += tiltStepSize;
+    tilt.write(currentTiltAngle);
+    Serial.println("angle increased: ");
+    Serial.println(currentTiltAngle);
+  } // else, do nothing, dont move!
 }
 
 void angleDown() {
   //add adjust angle function here
-  tilt.write(-tiltAngle);
-  Serial.println("angle decreased");
+  if (currentTiltAngle - tiltStepSize >= 0) {
+    currentTiltAngle -= tiltStepSize;
+    tilt.write(currentTiltAngle);
+    Serial.println("angle increased: ");
+    Serial.println(currentTiltAngle);
+  }
 }
 
 //immediately stops robot after letting go of throttle
