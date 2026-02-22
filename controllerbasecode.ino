@@ -1,15 +1,23 @@
 #include <Controller.h>
 #include <Servo.h>
 
+Servo tilt; // to tilt the wheel
+Servo laserPointer; // for laser pointer
+
 // ports:
 // nav motors: LEFT: ENA-A0, IN1-2, IN2-3 ; RIGHT: motor2: ENB-A1, IN3-4, IN4-5
 // shoot motor: ENA-A2, IN1-6, IN2-7
 
+// motors
 int shootMotor1 = 6;
 int shootMotor2 = 7;
 bool isShooting = false;
 bool isUp = false;
 bool isDown = false;
+
+// tilt variables
+int tiltPin = A0;
+int tiltAngle = 15; // arbitrarily set 15 degrees
 
 Controller controller("LeBronClanks", "lebron1234");
 
@@ -24,15 +32,20 @@ void setup() {
   //shoot motor configs
   pinMode(shootMotor1, OUTPUT);
   pinMode(shootMotor2, OUTPUT);
-  pinMode(11, OUTPUT);
+  pinMode(11, OUTPUT); // which pin is this?
 
   //buttons
   controller.registerButton("SHOOT", shoot);
   controller.registerButton("ANGLE INCREASE", angleUp);
   controller.registerButton("ANGLE DECREASE", angleDown);
-  controller.registerButton("TURN RIGHT 90", right90);
-  controller.registerButton("TURN LEFT 90", left90);
-  controller.registerDriveCallback(onDrive);
+
+  // tilt servo motor config
+  pinMode(A0, OUTPUT);
+  
+  // Attach the servo object to the pin
+  tilt.attach(tiltPin); 
+  tilt.write(tiltAngle); // Set initial position
+  
   controller.beginAP(false);
 }
 
@@ -42,20 +55,30 @@ void loop() {
 
 //button functions
 void shoot() {
-  isShooting = !isShooting;
+  Serial.println("shoot button pressed");
 
   // add shoot function here
-  if (isShooting) {
-    analogWrite(11, 255); //speed
-    digitalWrite(6, HIGH); // spin motors
-    digitalWrite(7, LOW);
-  } else {
-    digitalWrite(6, LOW);
-    digitalWrite(7, LOW);
-    analogWrite(11, 0);
-  }
+  analogWrite(11, 255); //speed
+  digitalWrite(shootMotor1, HIGH); // spin motors
+  digitalWrite(shootMotor2, LOW);
+  
+  delay(500); // can be unoptimal
+  
+  digitalWrite(shootMotor1, LOW); // stop motors
+  digitalWrite(shootMotor2, LOW);
 }
 
+void angleUp() {
+  // add adjust angle function here
+  tilt.write(tiltAngle);
+  Serial.println("angle increased");
+}
+
+void angleDown() {
+  //add adjust angle function here
+  tilt.write(-tiltAngle);
+  Serial.println("angle decreased");
+}
 
 //immediately stops robot after letting go of throttle
 void onDrive(int8_t left, int8_t right) {
