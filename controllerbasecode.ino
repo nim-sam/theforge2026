@@ -16,7 +16,7 @@ bool isUp = false;
 bool isDown = false;
 
 // tilt variables
-int tiltPin = A0;
+int tiltPin = 3;
 int tiltAngle = 15; // arbitrarily set 15 degrees
 
 Controller controller("LeBronClanks", "lebron1234");
@@ -25,7 +25,7 @@ void setup() {
   //Serial.begin(115200);
 
   //nav motor configs
-  controller.configureL298N(9, 2, 3, 10, 4, 5); //(LEFT) ENA, IN1, IN2, (RIGHT) ENB, IN3, IN4
+  controller.configureL298N(9, 2, 8, 10, 4, 5); //(LEFT) ENA, IN1, IN2, (RIGHT) ENB, IN3, IN4
   controller.setMotorMinPWM(110);
   controller.setFailsafeTimeoutMs(200);
 
