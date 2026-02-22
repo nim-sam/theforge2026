@@ -40,6 +40,9 @@ void setup() {
 
   // tilt servo motor
   pinMode(A0, OUTPUT);
+  // Attach the servo object to the pin
+  tilt.attach(tiltPin); 
+  tilt.write(currentAngle); // Set initial position
 }
 
 void loop() {
