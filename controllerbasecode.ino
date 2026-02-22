@@ -8,9 +8,13 @@ Servo laserPointer; // for laser pointer
 // nav motors: LEFT: ENA-A0, IN1-2, IN2-3 ; RIGHT: motor2: ENB-A1, IN3-4, IN4-5
 // shoot motor: ENA-A2, IN1-6, IN2-7
 
+// motors
 int shootMotor1 = 6;
 int shootMotor2 = 7;
+
+// tilt variables
 int tiltPin = A0;
+int currentAngle = 0;
 
 Controller controller("LeBronClanks", "lebron1234");
 
