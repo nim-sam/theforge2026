@@ -1,7 +1,7 @@
 #include <Controller.h>
 #include <Servo.h>
 
-Servo tilt; // to tilt the system
+Servo tilt; // to tilt the wheel
 Servo laserPointer; // for laser pointer
 
 // ports:
@@ -14,7 +14,7 @@ int shootMotor2 = 7;
 
 // tilt variables
 int tiltPin = A0;
-int currentAngle = 0;
+int tiltAngle = 15; // arbitrarily set 15 degrees
 
 Controller controller("LeBronClanks", "lebron1234");
 
@@ -29,7 +29,7 @@ void setup() {
   //shoot motor configs
   pinMode(shootMotor1, OUTPUT);
   pinMode(shootMotor2, OUTPUT);
-  pinMode(11, OUTPUT);
+  pinMode(11, OUTPUT); // which pin is this?
 
   //buttons
   controller.registerButton("SHOOT", shoot);
@@ -38,11 +38,12 @@ void setup() {
 
   controller.beginAP(true);
 
-  // tilt servo motor
+  // tilt servo motor config
   pinMode(A0, OUTPUT);
+  
   // Attach the servo object to the pin
   tilt.attach(tiltPin); 
-  tilt.write(currentAngle); // Set initial position
+  tilt.write(tiltAngle); // Set initial position
 }
 
 void loop() {
@@ -51,27 +52,28 @@ void loop() {
 
 //button functions
 void shoot() {
-
   Serial.println("shoot button pressed");
 
   // add shoot function here
   analogWrite(11, 255); //speed
-  digitalWrite(6, HIGH); // spin motors
-  digitalWrite(7, LOW);
-  delay(500);
-  digitalWrite(6, LOW); // stop motors
-  digitalWrite(7, LOW);
+  digitalWrite(shootMotor1, HIGH); // spin motors
+  digitalWrite(shootMotor2, LOW);
   
-
+  delay(500); // can be unoptimal
+  
+  digitalWrite(shootMotor1, LOW); // stop motors
+  digitalWrite(shootMotor2, LOW);
 }
 
 void angleUp() {
-  //add adjust angle function here
+  // add adjust angle function here
+  tilt.write(tiltAngle);
   Serial.println("angle increased");
 }
 
 void angleDown() {
   //add adjust angle function here
+  tilt.write(-tiltAngle);
   Serial.println("angle decreased");
 }
 
