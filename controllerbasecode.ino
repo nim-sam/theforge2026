@@ -1,4 +1,5 @@
 #include <Controller.h>
+#include <Servo.h>
 
 // ports:
 // nav motors: LEFT: ENA-A0, IN1-2, IN2-3 ; RIGHT: motor2: ENB-A1, IN3-4, IN4-5
