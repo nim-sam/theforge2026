@@ -10,7 +10,7 @@ Servo laserPointer; // for laser pointer
 
 int shootMotor1 = 6;
 int shootMotor2 = 7;
-int tilt = A0;
+int tiltPin = A0;
 
 Controller controller("LeBronClanks", "lebron1234");
 
