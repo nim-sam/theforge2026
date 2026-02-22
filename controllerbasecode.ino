@@ -14,11 +14,11 @@ bool isDown = false;
 Controller controller("LeBronClanks", "lebron1234");
 
 void setup() {
-  Serial.begin(115200);
+  //Serial.begin(115200);
 
   //nav motor configs
   controller.configureL298N(9, 2, 3, 10, 4, 5); //(LEFT) ENA, IN1, IN2, (RIGHT) ENB, IN3, IN4
-  controller.setMotorMinPWM(80);
+  controller.setMotorMinPWM(110);
   controller.setFailsafeTimeoutMs(200);
 
   //shoot motor configs
@@ -30,12 +30,13 @@ void setup() {
   controller.registerButton("SHOOT", shoot);
   controller.registerButton("ANGLE INCREASE", angleUp);
   controller.registerButton("ANGLE DECREASE", angleDown);
-
+  controller.registerButton("TURN RIGHT 90", right90);
+  controller.registerButton("TURN LEFT 90", left90);
+  controller.registerDriveCallback(onDrive);
   controller.beginAP(false);
 }
 
 void loop() {
-  controller.registerDriveCallback(onDrive);
   controller.update();
 }
 
@@ -55,23 +56,6 @@ void shoot() {
   }
 }
 
-void angleUp() {
-  isUp = !isUp;
-  if (isUp) {
-    //do something
-  } else {
-    //turn motor off
-  }
-}
-
-void angleDown() {
-  isDown = !isDown;
-    if (isDown) {
-    //do something
-    } else {
-      //turn motor off
-    }
-}
 
 //immediately stops robot after letting go of throttle
 void onDrive(int8_t left, int8_t right) {
@@ -83,7 +67,5 @@ void onDrive(int8_t left, int8_t right) {
     
     analogWrite(9, 255);
     analogWrite(10, 255);
-  } else {
-    controller.update();
   }
 }
